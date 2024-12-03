@@ -71,7 +71,7 @@ class ProblemSolutions {
      * @param prerequisites     - 2-dim array of directed edges.
      * @return boolean          - True if all exams can be taken, else false.
      */
-
+    //DONE
     public boolean canFinish(int numExams, 
                              int[][] prerequisites) {
       
@@ -79,11 +79,39 @@ class ProblemSolutions {
 
         // Build directed graph's adjacency list
         ArrayList<Integer>[] adj = getAdjList(numExams, 
-                                        prerequisites); 
+                                        prerequisites);
 
-        // ADD YOUR CODE HERE - ADD YOUR NAME / SECTION AT TOP OF FILE
-        return false;
+        int[] inDegree = new int[numNodes];
 
+        for (int i = 0; i < numNodes; i++) {
+            for (int neighbor : adj[i]) {
+                inDegree[neighbor]++;
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+
+        for (int i = 0; i < numNodes; i++) {
+            if (inDegree[i] == 0) {
+                queue.offer(i);
+            }
+        }
+
+        int completedCourses = 0;
+
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            completedCourses++;
+
+            for (int neighbor : adj[current]) {
+                inDegree[neighbor]--;
+                if (inDegree[neighbor] == 0) {
+                    queue.offer(neighbor);
+                }
+            }
+        }
+        
+        return completedCourses == numNodes;
     }
 
 
