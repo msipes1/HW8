@@ -103,8 +103,25 @@ public class Graph {
    */
   
   public int findRoot() {
+    int[] inDegrees = new int[numVertices];
 
-    // ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME/SECTION AT TOP OF FILE
-    return -1;
+    for (int src = 0; src < numVertices; src++) {
+      for (int dest : adjListArr[src]) {
+        inDegrees[dest]++;
+      }
+    }
+
+    int rootIndex = -1;
+    for (int i = 0; i < numVertices; i++) {
+      if (inDegrees[i] == 0) {
+        if (rootIndex != -1) {
+          // More than one root found
+          return -1;
+        }
+        rootIndex = i;
+      }
+    }
+
+    return rootIndex != -1 ? vertexValues.get(rootIndex) : -1;
   } 
 }
