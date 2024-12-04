@@ -110,7 +110,7 @@ class ProblemSolutions {
                 }
             }
         }
-        
+
         return completedCourses == numNodes;
     }
 
@@ -193,34 +193,38 @@ class ProblemSolutions {
 
     public int numGroups(int[][] adjMatrix) {
         int numNodes = adjMatrix.length;
-        Map<Integer,List<Integer>> graph = new HashMap();
-        int i = 0, j =0;
+        Map<Integer, List<Integer>> graph = new HashMap<>();
 
-        /*
-         * Converting the Graph Adjacency Matrix to
-         * an Adjacency List representation. This
-         * sample code illustrates a technique to do so.
-         */
-
-        for(i = 0; i < numNodes ; i++){
-            for(j = 0; j < numNodes; j++){
-                if( adjMatrix[i][j] == 1 && i != j ){
-                    // Add AdjList for node i if not there
-                    graph.putIfAbsent(i, new ArrayList());
-                    // Add AdjList for node j if not there
-                    graph.putIfAbsent(j, new ArrayList());
-
-                    // Update node i adjList to include node j
+        for (int i = 0; i < numNodes; i++) {
+            graph.putIfAbsent(i, new ArrayList<>());
+            for (int j = 0; j < numNodes; j++) {
+                if (adjMatrix[i][j] == 1 && i != j) {
                     graph.get(i).add(j);
-                    // Update node j adjList to include node i
+                    graph.putIfAbsent(j, new ArrayList<>());
                     graph.get(j).add(i);
                 }
             }
         }
 
-        // YOUR CODE GOES HERE - you can add helper methods, you do not need
-        // to put all code in this method.
-        return -1;
+        boolean[] visited = new boolean[numNodes];
+        int groups = 0;
+
+        for (int i = 0; i < numNodes; i++) {
+            if (!visited[i]) {
+                groups++;
+                dfs(i, graph, visited);
+            }
+        }
+
+        return groups;
     }
 
+    private void dfs(int node, Map<Integer, List<Integer>> graph, boolean[] visited) {
+        visited[node] = true;
+        for (int neighbor : graph.getOrDefault(node, Collections.emptyList())) {
+            if (!visited[neighbor]) {
+                dfs(neighbor, graph, visited);
+            }
+        }
+    }
 }
